@@ -10,17 +10,17 @@ pipeline {
             }
         }
 
-        stage('Pull images & Run Containers') {
+        stage('Pull images') {
             steps {
                 // Start the services using Docker Compose
                 echo "==========pulling and running the containers======="
                 //bat 'IF EXIST docker-compose.yml echo FOUND'
-                bat "docker-compose up -d"
+                bat "docker-compose pull"
                 echo "=====LOG====exit-code1: %ERRORLEVEL%"
 
             }
         }
-        stage('Scan Containers with Trivy') {
+        stage('Scan images with Trivy') {
             steps {
                 script {
                     echo "==========Scanning the images ======="
@@ -55,6 +55,16 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+        stage('TESTING ENV') {
+            steps {
+                // Start the services using Docker Compose
+                echo "==========running the containers======="
+                //bat 'IF EXIST docker-compose.yml echo FOUND'
+                bat "docker-compose up -d"
+                echo "=====LOG====exit-code1: %ERRORLEVEL%"
+
             }
         }
 
